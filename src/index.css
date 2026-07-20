@@ -1,0 +1,60 @@
+@import "tailwindcss";
+
+/* ============================================================
+   QUIZYFY — Design Tokens  (palet "Indigo Profesional")
+   Satu sumber kebenaran. Komponen memakai utility brand
+   (bg-primary, text-ink, border-line, dst) yang dipetakan di
+   sini — ganti brand tanpa menyentuh tiap file.
+   Redesign dari "Intest" (biru royal) -> Quizyfy (indigo/violet).
+   ============================================================ */
+@theme {
+  /* ── Brand inti ── */
+  --color-primary:      #4F46E5;  /* indigo — tombol, nav aktif, link */
+  --color-primary-600:  #4338CA;  /* indigo hover */
+  --color-primary-700:  #3730A3;  /* indigo pekat */
+  --color-primary-soft: #EEF2FF;  /* indigo tint (bg lembut, chip) */
+
+  --color-accent:       #8B5CF6;  /* violet — highlight, badge premium */
+  --color-accent-soft:  #F5F3FF;
+
+  --color-ink:          #1E293B;  /* teks utama (slate-800) */
+  --color-muted:        #64748B;  /* teks sekunder (slate-500) */
+  --color-muted-soft:   #94A3B8;  /* placeholder */
+
+  /* ── Permukaan & netral ── */
+  --color-bg:           #F8FAFC;  /* background utama (slate-50) */
+  --color-surface:      #FFFFFF;  /* kartu */
+  --color-surface-alt:  #F1F5F9;  /* permukaan alternatif */
+  --color-line:         #E2E8F0;  /* border halus */
+  --color-line-strong:  #CBD5E1;
+
+  /* ── Semantik ── */
+  --color-success:      #16A34A;
+  --color-success-soft: #DCFCE7;
+  --color-warning:      #F59E0B;
+  --color-warning-soft: #FEF3C7;
+  --color-danger:       #DC2626;
+  --color-danger-soft:  #FEE2E2;
+
+  /* ── Tipografi ── */
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  /* ── Radius & shadow ── */
+  --radius-card: 16px;
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.06), 0 8px 24px rgba(15, 23, 42, 0.04);
+}
+
+html { -webkit-font-smoothing: antialiased; }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+/* scrollbar halus */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: var(--color-line-strong); border-radius: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
