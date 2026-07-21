@@ -36,3 +36,16 @@ api.interceptors.response.use(
     return Promise.reject(error)
   },
 )
+
+// ─── Endpoint per peran ──────────────────────────────────────
+export const siswaApi = {
+  exams: () => api.get('/user/exams'),               // ujian aktif yang belum dikerjakan
+  riwayat: () => api.get('/user/exam'),              // daftar semua ujian
+  examDetail: (id: number) => api.get(`/user/exam/${id}`),
+  joinByToken: (token: string) => api.post('/user/exam/join', { token }),
+  startExam: (id: number) => api.post(`/user/exams/${id}/start`),
+  examStatus: (id: number) => api.get(`/user/exams/${id}/status`),
+  submitAnswer: (id: number, payload: unknown) => api.post(`/user/exams/${id}/answers`, payload),
+  finishExam: (id: number) => api.post(`/user/exams/${id}/finish`),
+  examResult: (id: number) => api.get(`/user/exams/${id}/result`),
+}
