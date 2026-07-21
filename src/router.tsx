@@ -7,6 +7,7 @@ import { LandingPage } from './pages/LandingPage'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { SiswaDashboard } from './pages/siswa/SiswaDashboard'
+import { DaftarUjianSiswa } from './pages/siswa/DaftarUjianSiswa'
 import { GuruDashboard } from './pages/guru/GuruDashboard'
 import { AdminDashboard } from './pages/admin/AdminDashboard'
 import { RequireRole } from './components/RequireRole'
@@ -75,6 +76,7 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <SiswaDashboard /> },
+      { path: 'ujian', element: <DaftarUjianSiswa /> },
     ],
   },
   {
