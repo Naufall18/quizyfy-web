@@ -12,7 +12,11 @@ import { SiswaPengaturan } from './pages/siswa/SiswaPengaturan'
 import { GuruDashboard } from './pages/guru/GuruDashboard'
 import { GuruDaftarUjian } from './pages/guru/GuruDaftarUjian'
 import { GuruBankSoal } from './pages/guru/GuruBankSoal'
+import { GuruPengaturan } from './pages/guru/GuruPengaturan'
 import { AdminDashboard } from './pages/admin/AdminDashboard'
+import { AdminPengguna } from './pages/admin/AdminPengguna'
+import { AdminTransaksi } from './pages/admin/AdminTransaksi'
+import { AdminPaket } from './pages/admin/AdminPaket'
 import { RequireRole } from './components/RequireRole'
 import { DashboardShell, type NavSection } from './components/DashboardShell'
 
@@ -64,7 +68,6 @@ const adminNav: NavSection[] = [
   },
 ]
 
-/** Peta rute Quizyfy: publik + dashboard per peran (siswa/guru/admin). */
 export const router = createBrowserRouter([
   { path: '/', element: <LandingPage /> },
   { path: '/login', element: <LoginPage /> },
@@ -94,6 +97,7 @@ export const router = createBrowserRouter([
       { index: true, element: <GuruDashboard /> },
       { path: 'ujian', element: <GuruDaftarUjian /> },
       { path: 'bank-soal', element: <GuruBankSoal /> },
+      { path: 'pengaturan', element: <GuruPengaturan /> },
     ],
   },
   {
@@ -105,6 +109,9 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <AdminDashboard /> },
+      { path: 'pengguna', element: <AdminPengguna /> },
+      { path: 'paket', element: <AdminPaket /> },
+      { path: 'transaksi', element: <AdminTransaksi /> },
     ],
   },
 ])
