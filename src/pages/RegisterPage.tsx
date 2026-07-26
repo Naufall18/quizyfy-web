@@ -5,6 +5,7 @@ import axios from 'axios'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
 import { cn } from '../lib/cn'
+import { toast } from '../components/ui/Toast'
 import { useAuthStore, homePathFor } from '../store/authStore'
 
 type RegisterRole = 'user' | 'guru'
@@ -22,26 +23,40 @@ export function RegisterPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirm, setConfirm] = useState('')
-  const [error, setError] = useState('')
+  const [fieldError, setFieldError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  function validate(): string | null {
+    if (name.trim().length < 2) return 'Nama minimal 2 karakter.'
+    if (!email.includes('@')) return 'Format email tidak valid.'
+    if (password.length < 6) return 'Password minimal 6 karakter.'
+    if (password !== confirm) return 'Konfirmasi password tidak sama.'
+    return null
+  }
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
-    if (password !== confirm) {
-      setError('Konfirmasi password tidak sama.')
+    setFieldError('')
+
+    const err = validate()
+    if (err) {
+      setFieldError(err)
+      toast.warning(err)
       return
     }
+
     setLoading(true)
     try {
       const user = await register({ name, email, password, passwordConfirmation: confirm, role })
+      toast.success(`Akun berhasil dibuat! Selamat datang, ${user.name.split(' ')[0]}!`)
       navigate(homePathFor(user.role), { replace: true })
     } catch (err) {
-      setError(
+      const message =
         axios.isAxiosError(err) && err.response?.data?.message
           ? err.response.data.message
-          : 'Gagal mendaftar. Coba beberapa saat lagi.',
-      )
+          : 'Gagal mendaftar. Coba beberapa saat lagi.'
+      setFieldError(message)
+      toast.error(message)
     } finally {
       setLoading(false)
     }
@@ -69,13 +84,16 @@ export function RegisterPage() {
                 type="button"
                 onClick={() => setRole(opt.value)}
                 className={cn(
-                  'rounded-2xl border p-4 text-left transition-colors',
+                  'rounded-2xl border p-4 text-left transition-all',
                   role === opt.value
                     ? 'border-primary bg-primary-soft ring-2 ring-primary/30'
-                    : 'border-line-strong bg-surface hover:bg-surface-alt',
+                    : 'border-line-strong bg-surface hover:bg-surface-alt hover:border-primary/30',
                 )}
               >
-                <opt.icon size={20} className={role === opt.value ? 'text-primary' : 'text-muted'} />
+                <opt.icon
+                  size={20}
+                  className={role === opt.value ? 'text-primary' : 'text-muted'}
+                />
                 <div className="mt-2 text-sm font-bold text-ink">{opt.label}</div>
                 <div className="mt-0.5 text-xs text-muted">{opt.desc}</div>
               </button>
@@ -91,7 +109,7 @@ export function RegisterPage() {
               placeholder="Nama sesuai identitas"
               icon={<User size={17} />}
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => { setName(e.target.value); setFieldError('') }}
             />
             <Input
               label="Email"
@@ -102,7 +120,7 @@ export function RegisterPage() {
               placeholder="nama@sekolah.sch.id"
               icon={<Mail size={17} />}
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => { setEmail(e.target.value); setFieldError('') }}
             />
             <Input
               label="Password"
@@ -114,7 +132,7 @@ export function RegisterPage() {
               placeholder="Minimal 6 karakter"
               icon={<Lock size={17} />}
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => { setPassword(e.target.value); setFieldError('') }}
             />
             <Input
               label="Konfirmasi password"
@@ -125,8 +143,8 @@ export function RegisterPage() {
               placeholder="Ulangi password"
               icon={<Lock size={17} />}
               value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              error={error || undefined}
+              onChange={(e) => { setConfirm(e.target.value); setFieldError('') }}
+              error={fieldError || undefined}
             />
 
             <Button type="submit" size="lg" className="w-full" disabled={loading}>
@@ -136,7 +154,9 @@ export function RegisterPage() {
 
           <p className="mt-6 text-center text-sm text-muted">
             Sudah punya akun?{' '}
-            <Link to="/login" className="font-semibold text-primary hover:underline">Masuk</Link>
+            <Link to="/login" className="font-semibold text-primary hover:underline">
+              Masuk
+            </Link>
           </p>
         </div>
       </div>
@@ -146,12 +166,10 @@ export function RegisterPage() {
           <div className="mx-auto grid h-20 w-20 place-items-center rounded-3xl bg-primary text-white shadow-lg">
             <GraduationCap size={40} />
           </div>
-          <h2 className="mt-8 text-2xl font-extrabold text-ink">
-            Bergabung dengan Quizyfy
-          </h2>
+          <h2 className="mt-8 text-2xl font-extrabold text-ink">Bergabung dengan Quizyfy</h2>
           <p className="mt-3 leading-relaxed text-muted">
-            Guru menyusun ujian dalam hitungan menit; siswa mengerjakan dari
-            perangkat mana pun dengan nilai yang keluar otomatis.
+            Guru menyusun ujian dalam hitungan menit; siswa mengerjakan dari perangkat mana pun
+            dengan nilai yang keluar otomatis.
           </p>
         </div>
       </div>
