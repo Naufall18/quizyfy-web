@@ -4,6 +4,7 @@ import { Mail, Lock, Eye, EyeOff, GraduationCap } from 'lucide-react'
 import axios from 'axios'
 import { Button } from '../components/ui/Button'
 import { Input } from '../components/ui/Input'
+import { toast } from '../components/ui/Toast'
 import { useAuthStore, homePathFor } from '../store/authStore'
 
 export function LoginPage() {
@@ -12,22 +13,35 @@ export function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPw, setShowPw] = useState(false)
-  const [error, setError] = useState('')
+  const [fieldError, setFieldError] = useState('')
   const [loading, setLoading] = useState(false)
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setError('')
+    setFieldError('')
+
+    // Validasi client-side sederhana
+    if (!email.includes('@')) {
+      setFieldError('Format email tidak valid.')
+      return
+    }
+    if (password.length < 6) {
+      setFieldError('Password minimal 6 karakter.')
+      return
+    }
+
     setLoading(true)
     try {
       const user = await login(email, password)
+      toast.success(`Selamat datang kembali, ${user.name.split(' ')[0]}!`)
       navigate(homePathFor(user.role), { replace: true })
     } catch (err) {
-      setError(
+      const message =
         axios.isAxiosError(err) && err.response?.data?.message
           ? err.response.data.message
-          : 'Gagal masuk. Periksa koneksi lalu coba lagi.',
-      )
+          : 'Gagal masuk. Periksa email & password lalu coba lagi.'
+      setFieldError(message)
+      toast.error(message)
     } finally {
       setLoading(false)
     }
@@ -58,7 +72,10 @@ export function LoginPage() {
               placeholder="nama@sekolah.sch.id"
               icon={<Mail size={17} />}
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value)
+                setFieldError('')
+              }}
             />
             <div>
               <Input
@@ -70,8 +87,11 @@ export function LoginPage() {
                 placeholder="••••••••"
                 icon={<Lock size={17} />}
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                error={error || undefined}
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                  setFieldError('')
+                }}
+                error={fieldError || undefined}
               />
               <button
                 type="button"
@@ -84,7 +104,10 @@ export function LoginPage() {
             </div>
 
             <div className="flex justify-end">
-              <Link to="/forgot-password" className="text-sm font-semibold text-primary hover:underline">
+              <Link
+                to="/forgot-password"
+                className="text-sm font-semibold text-primary hover:underline"
+              >
                 Lupa password?
               </Link>
             </div>
@@ -96,7 +119,9 @@ export function LoginPage() {
 
           <p className="mt-6 text-center text-sm text-muted">
             Belum punya akun?{' '}
-            <Link to="/register" className="font-semibold text-primary hover:underline">Daftar</Link>
+            <Link to="/register" className="font-semibold text-primary hover:underline">
+              Daftar
+            </Link>
           </p>
         </div>
       </div>
