@@ -8,7 +8,10 @@ import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { SiswaDashboard } from './pages/siswa/SiswaDashboard'
 import { DaftarUjianSiswa } from './pages/siswa/DaftarUjianSiswa'
+import { SiswaPengaturan } from './pages/siswa/SiswaPengaturan'
 import { GuruDashboard } from './pages/guru/GuruDashboard'
+import { GuruDaftarUjian } from './pages/guru/GuruDaftarUjian'
+import { GuruBankSoal } from './pages/guru/GuruBankSoal'
 import { AdminDashboard } from './pages/admin/AdminDashboard'
 import { RequireRole } from './components/RequireRole'
 import { DashboardShell, type NavSection } from './components/DashboardShell'
@@ -77,6 +80,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <SiswaDashboard /> },
       { path: 'ujian', element: <DaftarUjianSiswa /> },
+      { path: 'pengaturan', element: <SiswaPengaturan /> },
     ],
   },
   {
@@ -88,6 +92,8 @@ export const router = createBrowserRouter([
     ),
     children: [
       { index: true, element: <GuruDashboard /> },
+      { path: 'ujian', element: <GuruDaftarUjian /> },
+      { path: 'bank-soal', element: <GuruBankSoal /> },
     ],
   },
   {
