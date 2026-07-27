@@ -63,8 +63,7 @@ export const guruApi = {
     api.get('/guru/questions', { params }),
   createQuestion: (payload: unknown) => api.post('/guru/questions', payload),
   updateQuestion: (id: number, payload: unknown) => api.put(`/guru/questions/${id}`, payload),
-  deleteQuestion: (id: number) => api.delete(`/guru/questions/${id}`),
-  // Statistik
+  deleteQuestion: (id: number) => api.delete(`/guru/questions/${id}`),  // Statistik
   stats: () => api.get('/guru/stats'),
   // Kategori
   categories: () => api.get('/guru/categories'),
