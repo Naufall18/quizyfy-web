@@ -6,8 +6,12 @@ import {
 import { LandingPage } from './pages/LandingPage'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
+import { NotFound } from './pages/NotFound'
 import { SiswaDashboard } from './pages/siswa/SiswaDashboard'
 import { DaftarUjianSiswa } from './pages/siswa/DaftarUjianSiswa'
+import { DetailUjianSiswa } from './pages/siswa/DetailUjianSiswa'
+import { KerjakanUjian } from './pages/siswa/KerjakanUjian'
+import { HasilUjianSiswa } from './pages/siswa/HasilUjianSiswa'
 import { SiswaPengaturan } from './pages/siswa/SiswaPengaturan'
 import { GuruDashboard } from './pages/guru/GuruDashboard'
 import { GuruDaftarUjian } from './pages/guru/GuruDaftarUjian'
@@ -73,6 +77,7 @@ export const router = createBrowserRouter([
   { path: '/login', element: <LoginPage /> },
   { path: '/register', element: <RegisterPage /> },
 
+  // ─── Siswa ────────────────────────────────────────────────────
   {
     path: '/siswa',
     element: (
@@ -83,9 +88,14 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <SiswaDashboard /> },
       { path: 'ujian', element: <DaftarUjianSiswa /> },
+      { path: 'ujian/:id', element: <DetailUjianSiswa /> },
+      { path: 'ujian/:id/kerjakan', element: <KerjakanUjian /> },
+      { path: 'ujian/:id/hasil', element: <HasilUjianSiswa /> },
       { path: 'pengaturan', element: <SiswaPengaturan /> },
     ],
   },
+
+  // ─── Guru ─────────────────────────────────────────────────────
   {
     path: '/guru',
     element: (
@@ -100,6 +110,8 @@ export const router = createBrowserRouter([
       { path: 'pengaturan', element: <GuruPengaturan /> },
     ],
   },
+
+  // ─── Admin ────────────────────────────────────────────────────
   {
     path: '/admin',
     element: (
@@ -114,4 +126,7 @@ export const router = createBrowserRouter([
       { path: 'transaksi', element: <AdminTransaksi /> },
     ],
   },
+
+  // ─── 404 ──────────────────────────────────────────────────────
+  { path: '*', element: <NotFound /> },
 ])
