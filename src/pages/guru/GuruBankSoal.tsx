@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Plus, Search, Database, Edit2, Trash2 } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import { guruApi } from '../../lib/api'
 import { Skeleton } from '../../components/ui/Skeleton'
 import { Button } from '../../components/ui/Button'
@@ -62,10 +63,12 @@ export function GuruBankSoal() {
           <h1 className="text-2xl font-extrabold text-ink">Bank Soal</h1>
           <p className="mt-1 text-muted">Semua soal yang telah kamu buat.</p>
         </div>
-        <Button size="sm" className="gap-2">
-          <Plus size={16} />
-          Tambah Soal
-        </Button>
+        <Link to="/guru/bank-soal/tambah">
+          <Button size="sm" className="gap-2">
+            <Plus size={16} />
+            Tambah Soal
+          </Button>
+        </Link>
       </div>
 
       {/* Search */}
