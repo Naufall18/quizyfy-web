@@ -22,6 +22,7 @@ import { AdminDashboard } from './pages/admin/AdminDashboard'
 import { AdminPengguna } from './pages/admin/AdminPengguna'
 import { AdminTransaksi } from './pages/admin/AdminTransaksi'
 import { AdminPaket } from './pages/admin/AdminPaket'
+import { AdminPengaturan } from './pages/admin/AdminPengaturan'
 import { RequireRole } from './components/RequireRole'
 import { DashboardShell, type NavSection } from './components/DashboardShell'
 
@@ -126,6 +127,7 @@ export const router = createBrowserRouter([
       { path: 'pengguna', element: <AdminPengguna /> },
       { path: 'paket', element: <AdminPaket /> },
       { path: 'transaksi', element: <AdminTransaksi /> },
+      { path: 'pengaturan', element: <AdminPengaturan /> },
     ],
   },
 
