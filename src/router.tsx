@@ -17,6 +17,7 @@ import { GuruDashboard } from './pages/guru/GuruDashboard'
 import { GuruDaftarUjian } from './pages/guru/GuruDaftarUjian'
 import { GuruBankSoal } from './pages/guru/GuruBankSoal'
 import { GuruPengaturan } from './pages/guru/GuruPengaturan'
+import { GuruBuatUjian } from './pages/guru/GuruBuatUjian'
 import { AdminDashboard } from './pages/admin/AdminDashboard'
 import { AdminPengguna } from './pages/admin/AdminPengguna'
 import { AdminTransaksi } from './pages/admin/AdminTransaksi'
@@ -106,6 +107,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <GuruDashboard /> },
       { path: 'ujian', element: <GuruDaftarUjian /> },
+      { path: 'ujian/buat', element: <GuruBuatUjian /> },
       { path: 'bank-soal', element: <GuruBankSoal /> },
       { path: 'pengaturan', element: <GuruPengaturan /> },
     ],
