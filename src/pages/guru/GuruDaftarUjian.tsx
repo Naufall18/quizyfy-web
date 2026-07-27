@@ -6,7 +6,6 @@ import type { Exam, Paginated } from '../../types'
 import { Skeleton } from '../../components/ui/Skeleton'
 import { Button } from '../../components/ui/Button'
 import { cn } from '../../lib/cn'
-
 const STATUS_STYLE: Record<string, string> = {
   aktif: 'bg-success-soft text-success',
   nonaktif: 'bg-surface-alt text-muted',
@@ -107,10 +106,12 @@ export function GuruDaftarUjian() {
           <h1 className="text-2xl font-extrabold text-ink">Daftar Ujian</h1>
           <p className="mt-1 text-muted">Semua ujian yang telah kamu buat.</p>
         </div>
-        <Button size="sm" className="gap-2">
-          <Plus size={16} />
-          Buat Ujian Baru
-        </Button>
+        <Link to="/guru/ujian/buat">
+          <Button size="sm" className="gap-2">
+            <Plus size={16} />
+            Buat Ujian Baru
+          </Button>
+        </Link>
       </div>
 
       {/* Filter bar */}
