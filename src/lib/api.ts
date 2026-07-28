@@ -58,6 +58,8 @@ export const guruApi = {
   updateExam: (id: number, payload: unknown) => api.put(`/guru/exams/${id}`, payload),
   deleteExam: (id: number) => api.delete(`/guru/exams/${id}`),
   toggleStatus: (id: number) => api.patch(`/guru/exams/${id}/toggle`),
+  examResults: (id: number) => api.get(`/guru/exams/${id}/results`),
+  examStatistics: (id: number) => api.get(`/guru/exams/${id}/statistics`),
   // Bank Soal
   questions: (params?: { page?: number; category_id?: number }) =>
     api.get('/guru/questions', { params }),
