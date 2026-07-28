@@ -15,10 +15,12 @@ import { HasilUjianSiswa } from './pages/siswa/HasilUjianSiswa'
 import { SiswaPengaturan } from './pages/siswa/SiswaPengaturan'
 import { GuruDashboard } from './pages/guru/GuruDashboard'
 import { GuruDaftarUjian } from './pages/guru/GuruDaftarUjian'
+import { GuruDetailUjian } from './pages/guru/GuruDetailUjian'
 import { GuruBankSoal } from './pages/guru/GuruBankSoal'
 import { GuruPengaturan } from './pages/guru/GuruPengaturan'
 import { GuruBuatUjian } from './pages/guru/GuruBuatUjian'
 import { GuruTambahSoal } from './pages/guru/GuruTambahSoal'
+import { GuruLangganan } from './pages/guru/GuruLangganan'
 import { AdminDashboard } from './pages/admin/AdminDashboard'
 import { AdminPengguna } from './pages/admin/AdminPengguna'
 import { AdminTransaksi } from './pages/admin/AdminTransaksi'
@@ -110,8 +112,10 @@ export const router = createBrowserRouter([
       { index: true, element: <GuruDashboard /> },
       { path: 'ujian', element: <GuruDaftarUjian /> },
       { path: 'ujian/buat', element: <GuruBuatUjian /> },
+      { path: 'ujian/:id', element: <GuruDetailUjian /> },
       { path: 'bank-soal', element: <GuruBankSoal /> },
       { path: 'bank-soal/tambah', element: <GuruTambahSoal /> },
+      { path: 'langganan', element: <GuruLangganan /> },
       { path: 'pengaturan', element: <GuruPengaturan /> },
     ],
   },
