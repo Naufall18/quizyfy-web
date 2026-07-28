@@ -49,8 +49,7 @@ function ExamRow({ exam }: { exam: Exam }) {
           <Button variant="outline" size="sm">
             Detail
           </Button>
-        </Link>
-        <Button
+        </Link>        <Button
           variant="outline"
           size="sm"
           className="gap-1"
