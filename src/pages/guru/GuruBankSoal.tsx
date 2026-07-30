@@ -122,12 +122,14 @@ export function GuruBankSoal() {
                 <p className="mt-2 line-clamp-2 text-sm text-ink">{q.text}</p>
               </div>
               <div className="flex shrink-0 gap-2">
-                <button
-                  className="grid h-8 w-8 place-items-center rounded-xl border border-line text-muted transition-colors hover:border-primary/40 hover:text-primary"
-                  aria-label="Edit soal"
-                >
-                  <Edit2 size={14} />
-                </button>
+                <Link to={`/guru/bank-soal/${q.id}/edit`}>
+                  <button
+                    className="grid h-8 w-8 place-items-center rounded-xl border border-line text-muted transition-colors hover:border-primary/40 hover:text-primary"
+                    aria-label="Edit soal"
+                  >
+                    <Edit2 size={14} />
+                  </button>
+                </Link>
                 <button
                   className="grid h-8 w-8 place-items-center rounded-xl border border-line text-muted transition-colors hover:border-danger/40 hover:text-danger"
                   aria-label="Hapus soal"
