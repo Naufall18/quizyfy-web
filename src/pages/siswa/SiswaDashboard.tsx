@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Search, BookMarked, Sparkles } from 'lucide-react'
+import { Search, BookMarked, Sparkles, History, BookOpen } from 'lucide-react'
 import { siswaApi } from '../../lib/api'
 import type { Exam, Paginated } from '../../types'
 import { ExamCard } from '../../components/ExamCard'
 import { Skeleton } from '../../components/ui/Skeleton'
+import { EmptyState } from '../../components/ui/EmptyState'
+import { Button } from '../../components/ui/Button'
 
 /* Dashboard siswa sesuai Figma: search, banner promo + stat card, grid Ujian Aktif. */
 export function SiswaDashboard() {
@@ -52,7 +54,7 @@ export function SiswaDashboard() {
         />
       </div>
 
-      {/* Banner + stat (layout Figma: banner lebar kiri, kartu stat kanan) */}
+      {/* Banner + stat */}
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary-700 via-primary to-accent p-8 text-white lg:col-span-2">
           <span className="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-bold backdrop-blur">
@@ -80,6 +82,28 @@ export function SiswaDashboard() {
         </div>
       </div>
 
+      {/* Quick links */}
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+        {[
+          { to: '/siswa/ujian', icon: BookOpen, label: 'Daftar Ujian', desc: 'Lihat ujian aktif' },
+          { to: '/siswa/riwayat', icon: History, label: 'Riwayat', desc: 'Ujian yang dikerjakan' },
+        ].map((item) => (
+          <Link
+            key={item.to}
+            to={item.to}
+            className="group flex items-center gap-3 rounded-2xl border border-line bg-surface p-4 transition-all hover:border-primary/30 hover:shadow-md"
+          >
+            <span className="grid h-10 w-10 place-items-center rounded-xl bg-primary-soft text-primary transition-colors group-hover:bg-primary group-hover:text-white">
+              <item.icon size={18} />
+            </span>
+            <div>
+              <div className="text-sm font-bold text-ink">{item.label}</div>
+              <div className="text-xs text-muted">{item.desc}</div>
+            </div>
+          </Link>
+        ))}
+      </div>
+
       {/* Ujian Aktif */}
       <div>
         <div className="mb-4 flex items-center justify-between">
@@ -94,13 +118,16 @@ export function SiswaDashboard() {
             {Array.from({ length: 3 }).map((_, i) => <Skeleton key={i} className="h-72 rounded-2xl" />)}
           </div>
         ) : filtered.length === 0 ? (
-          <div className="grid place-items-center rounded-2xl border border-dashed border-line-strong bg-surface py-16 text-center">
-            <BookMarked size={32} className="text-muted-soft" />
-            <p className="mt-3 font-semibold text-ink">Belum ada ujian aktif</p>
-            <p className="mt-1 text-sm text-muted">
-              Minta kode ujian dari gurumu, lalu gabung lewat menu Daftar Ujian.
-            </p>
-          </div>
+          <EmptyState
+            icon={<BookMarked size={28} />}
+            title="Belum ada ujian aktif"
+            description="Minta kode ujian dari gurumu, lalu gabung lewat menu Daftar Ujian."
+            action={
+              <Link to="/siswa/ujian">
+                <Button size="sm">Ke Daftar Ujian</Button>
+              </Link>
+            }
+          />
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {filtered.map((e) => <ExamCard key={e.id} exam={e} />)}
