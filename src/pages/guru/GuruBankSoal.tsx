@@ -4,7 +4,10 @@ import { Link } from 'react-router-dom'
 import { guruApi } from '../../lib/api'
 import { Skeleton } from '../../components/ui/Skeleton'
 import { Button } from '../../components/ui/Button'
-import { cn } from '../../lib/cn'
+import { Badge } from '../../components/ui/Badge'
+import { EmptyState } from '../../components/ui/EmptyState'
+import { ConfirmDialog } from '../../components/ui/ConfirmDialog'
+import { toast } from '../../components/ui/Toast'
 
 interface Question {
   id: number
@@ -19,16 +22,19 @@ const TYPE_LABEL: Record<string, string> = {
   essay: 'Essay',
   true_false: 'Benar/Salah',
 }
-const TYPE_STYLE: Record<string, string> = {
-  pg: 'bg-primary-soft text-primary',
-  essay: 'bg-accent-soft text-accent',
-  true_false: 'bg-success-soft text-success',
+
+const TYPE_VARIANT: Record<string, 'primary' | 'accent' | 'success'> = {
+  pg: 'primary',
+  essay: 'accent',
+  true_false: 'success',
 }
 
 export function GuruBankSoal() {
   const [questions, setQuestions] = useState<Question[]>([])
   const [loading, setLoading] = useState(true)
   const [query, setQuery] = useState('')
+  const [deleteTarget, setDeleteTarget] = useState<Question | null>(null)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
     let active = true
@@ -40,20 +46,29 @@ export function GuruBankSoal() {
           setQuestions((d.data ?? d) as Question[])
         }
       })
-      .catch(() => {
-        if (active) setQuestions([])
-      })
-      .finally(() => {
-        if (active) setLoading(false)
-      })
-    return () => {
-      active = false
-    }
+      .catch(() => { if (active) setQuestions([]) })
+      .finally(() => { if (active) setLoading(false) })
+    return () => { active = false }
   }, [])
 
   const filtered = questions.filter((q) =>
     q.text.toLowerCase().includes(query.toLowerCase()),
   )
+
+  async function handleDelete() {
+    if (!deleteTarget) return
+    setDeleting(true)
+    try {
+      await guruApi.deleteQuestion(deleteTarget.id)
+      setQuestions((prev) => prev.filter((q) => q.id !== deleteTarget.id))
+      toast.success('Soal berhasil dihapus')
+      setDeleteTarget(null)
+    } catch {
+      toast.error('Gagal menghapus soal.')
+    } finally {
+      setDeleting(false)
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -61,7 +76,9 @@ export function GuruBankSoal() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-ink">Bank Soal</h1>
-          <p className="mt-1 text-muted">Semua soal yang telah kamu buat.</p>
+          <p className="mt-1 text-muted">
+            {questions.length} soal tersedia
+          </p>
         </div>
         <Link to="/guru/bank-soal/tambah">
           <Button size="sm" className="gap-2">
@@ -90,11 +107,21 @@ export function GuruBankSoal() {
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="grid place-items-center rounded-2xl border border-dashed border-line-strong bg-surface py-16 text-center">
-          <Database size={32} className="text-muted-soft" />
-          <p className="mt-3 font-semibold text-ink">Bank soal masih kosong</p>
-          <p className="mt-1 text-sm text-muted">Mulai tambahkan soal pertamamu.</p>
-        </div>
+        <EmptyState
+          icon={<Database size={28} />}
+          title={query ? 'Soal tidak ditemukan' : 'Bank soal masih kosong'}
+          description={query ? 'Coba kata kunci lain.' : 'Mulai tambahkan soal pertamamu.'}
+          action={
+            !query ? (
+              <Link to="/guru/bank-soal/tambah">
+                <Button size="sm" className="gap-2">
+                  <Plus size={14} />
+                  Tambah Soal
+                </Button>
+              </Link>
+            ) : undefined
+          }
+        />
       ) : (
         <div className="space-y-3">
           {filtered.map((q, idx) => (
@@ -102,21 +129,17 @@ export function GuruBankSoal() {
               key={q.id}
               className="flex items-start justify-between gap-4 rounded-2xl border border-line bg-surface p-5 transition-shadow hover:shadow-md"
             >
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-xs font-bold text-muted-soft">#{idx + 1}</span>
-                  <span
-                    className={cn(
-                      'rounded-full px-2.5 py-0.5 text-xs font-bold',
-                      TYPE_STYLE[q.type] ?? 'bg-surface-alt text-muted',
-                    )}
+                  <Badge
+                    variant={TYPE_VARIANT[q.type] ?? 'neutral'}
+                    size="sm"
                   >
                     {TYPE_LABEL[q.type] ?? q.type}
-                  </span>
+                  </Badge>
                   {q.category && (
-                    <span className="rounded-full bg-surface-alt px-2.5 py-0.5 text-xs font-medium text-muted">
-                      {q.category.name}
-                    </span>
+                    <Badge variant="neutral" size="sm">{q.category.name}</Badge>
                   )}
                 </div>
                 <p className="mt-2 line-clamp-2 text-sm text-ink">{q.text}</p>
@@ -131,6 +154,7 @@ export function GuruBankSoal() {
                   </button>
                 </Link>
                 <button
+                  onClick={() => setDeleteTarget(q)}
                   className="grid h-8 w-8 place-items-center rounded-xl border border-line text-muted transition-colors hover:border-danger/40 hover:text-danger"
                   aria-label="Hapus soal"
                 >
@@ -141,6 +165,20 @@ export function GuruBankSoal() {
           ))}
         </div>
       )}
+
+      {/* Confirm hapus */}
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={handleDelete}
+        title={`Hapus soal ini?`}
+        description={deleteTarget?.text
+          ? `"${deleteTarget.text.slice(0, 60)}…" akan dihapus permanen.`
+          : 'Soal akan dihapus permanen dan tidak bisa dikembalikan.'}
+        confirmLabel="Hapus"
+        variant="danger"
+        loading={deleting}
+      />
     </div>
   )
 }
