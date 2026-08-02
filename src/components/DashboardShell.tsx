@@ -112,7 +112,7 @@ export function DashboardShell({ sections }: { sections: NavSection[] }) {
           <div className="flex items-center gap-3">
             <div className="text-right">
               <div className="text-sm font-bold leading-tight text-ink">{user?.name}</div>
-              <div className="text-xs text-muted">{user?.email}</div>
+              <div className="text-xs text-muted capitalize">{user?.role === 'user' ? 'Siswa' : user?.role}</div>
             </div>
             <div className="grid h-10 w-10 place-items-center rounded-full bg-primary-soft font-bold text-primary">
               {user?.name?.charAt(0).toUpperCase() ?? '?'}
