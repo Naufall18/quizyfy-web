@@ -176,7 +176,7 @@ export function AdminPengguna() {
                 : 'border-line bg-surface text-muted hover:border-primary/40 hover:text-ink',
             )}
           >
-            {r === '' ? 'Semua' : ROLE_LABEL[r]}
+            {r === '' ? 'Semua' : r === 'user' ? 'Siswa' : r === 'guru' ? 'Guru' : 'Admin'}
           </button>
         ))}
       </div>
