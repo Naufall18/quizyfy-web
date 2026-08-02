@@ -77,7 +77,7 @@ export function GuruDashboard() {
             Kelola bank soal dan ujianmu dari sini.
           </p>
         </div>
-        <Link to="/guru/ujian">
+        <Link to="/guru/ujian/buat">
           <Button size="sm" className="gap-2">
             <Plus size={16} />
             Buat Ujian Baru
