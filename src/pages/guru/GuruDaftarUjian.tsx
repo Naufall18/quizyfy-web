@@ -5,7 +5,10 @@ import { guruApi } from '../../lib/api'
 import type { Exam, Paginated } from '../../types'
 import { Skeleton } from '../../components/ui/Skeleton'
 import { Button } from '../../components/ui/Button'
+import { Pagination } from '../../components/ui/Pagination'
 import { cn } from '../../lib/cn'
+
+const PAGE_SIZE = 10
 const STATUS_STYLE: Record<string, string> = {
   aktif: 'bg-success-soft text-success',
   nonaktif: 'bg-surface-alt text-muted',
@@ -68,6 +71,7 @@ export function GuruDaftarUjian() {
   const [loading, setLoading] = useState(true)
   const [query, setQuery] = useState('')
   const [filterStatus, setFilterStatus] = useState<string>('semua')
+  const [currentPage, setCurrentPage] = useState(1)
 
   useEffect(() => {
     let active = true
@@ -96,6 +100,12 @@ export function GuruDaftarUjian() {
     const matchStatus = filterStatus === 'semua' || e.status === filterStatus
     return matchQuery && matchStatus
   })
+
+  // Reset ke halaman 1 jika filter/query berubah
+  useEffect(() => { setCurrentPage(1) }, [query, filterStatus])
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
+  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
 
   return (
     <div className="space-y-6">
@@ -155,10 +165,20 @@ export function GuruDaftarUjian() {
         </div>
       ) : (
         <div className="space-y-3">
-          {filtered.map((e) => (
+          {paginated.map((e) => (
             <ExamRow key={e.id} exam={e} />
           ))}
         </div>
+      )}
+
+      {/* Pagination */}
+      {!loading && filtered.length > PAGE_SIZE && (
+        <Pagination
+          page={currentPage}
+          totalPages={totalPages}
+          onChange={setCurrentPage}
+          className="mt-2"
+        />
       )}
     </div>
   )
