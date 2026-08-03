@@ -141,6 +141,22 @@ export function KerjakanUjian() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-4">
+      {/* Banner warning waktu — muncul saat <=5 menit */}
+      {timerWarning && (
+        <div className="flex items-center gap-3 rounded-xl border border-warning/40 bg-warning-soft px-4 py-3 text-sm font-semibold text-warning">
+          <AlertTriangle size={16} className="shrink-0" />
+          Waktu tersisa kurang dari 5 menit! Segera selesaikan ujianmu.
+        </div>
+      )}
+
+      {/* Banner danger waktu — muncul saat <=60 detik */}
+      {timerDanger && (
+        <div className="flex animate-pulse items-center gap-3 rounded-xl border border-danger/40 bg-danger-soft px-4 py-3 text-sm font-bold text-danger">
+          <AlertTriangle size={16} className="shrink-0 animate-bounce" />
+          Waktu hampir habis! Kurang dari 1 menit.
+        </div>
+      )}
+
       {/* Header: Soal No + Timer + Lihat Nomor */}
       <div className="flex items-center gap-3">
         <div className="flex flex-1 items-center gap-3 rounded-xl border border-line bg-surface px-4 py-2.5">

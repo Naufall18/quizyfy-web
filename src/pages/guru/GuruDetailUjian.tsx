@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import {
   ArrowLeft, Clock, FileQuestion, BarChart2, Calendar,
-  Users, Trophy, ChevronDown, ChevronUp, ToggleLeft, ToggleRight,
+  Users, Trophy, ChevronDown, ChevronUp, ToggleLeft, ToggleRight, Download,
 } from 'lucide-react'
 import { guruApi } from '../../lib/api'
 import type { Exam } from '../../types'
@@ -106,6 +106,33 @@ export function GuruDetailUjian() {
   const avgScore = results.length
     ? Math.round(results.reduce((s, r) => s + r.score, 0) / results.length)
     : 0
+
+  /** Export hasil siswa ke CSV */
+  function exportCSV() {
+    if (!results.length) return
+    const header = ['No', 'Nama', 'Email', 'Nilai', 'Status', 'Benar', 'Salah', 'Waktu Submit']
+    const rows = results.map((r, i) => [
+      i + 1,
+      r.user.name,
+      r.user.email,
+      r.score,
+      r.passed ? 'Lulus' : 'Tidak Lulus',
+      r.correct_answers,
+      r.wrong_answers,
+      r.submitted_at ? new Date(r.submitted_at).toLocaleString('id-ID') : '—',
+    ])
+    const csv = [header, ...rows]
+      .map((row) => row.map((v) => `"${String(v).replace(/"/g, '""')}"`).join(','))
+      .join('\r\n')
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `hasil-ujian-${exam?.titles ?? id}-${new Date().toISOString().slice(0, 10)}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
+    toast.success('CSV berhasil diunduh')
+  }
 
   if (loadingExam) {
     return (
@@ -223,7 +250,19 @@ export function GuruDetailUjian() {
           className="flex w-full items-center justify-between px-5 py-4 hover:bg-surface-alt transition-colors"
         >
           <span className="font-extrabold text-ink">Hasil Siswa ({results.length})</span>
-          {showResults ? <ChevronUp size={18} className="text-muted" /> : <ChevronDown size={18} className="text-muted" />}
+          <div className="flex items-center gap-2">
+            {results.length > 0 && (
+              <span
+                role="button"
+                onClick={(e) => { e.stopPropagation(); exportCSV() }}
+                className="inline-flex items-center gap-1.5 rounded-lg border border-line-strong bg-surface px-3 py-1.5 text-xs font-semibold text-muted transition-colors hover:border-primary/40 hover:text-primary"
+              >
+                <Download size={12} />
+                Export CSV
+              </span>
+            )}
+            {showResults ? <ChevronUp size={18} className="text-muted" /> : <ChevronDown size={18} className="text-muted" />}
+          </div>
         </button>
 
         {showResults && (
