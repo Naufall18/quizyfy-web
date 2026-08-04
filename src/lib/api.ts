@@ -60,12 +60,19 @@ export const guruApi = {
   toggleStatus: (id: number) => api.patch(`/guru/exams/${id}/toggle`),
   examResults: (id: number) => api.get(`/guru/exams/${id}/results`),
   examStatistics: (id: number) => api.get(`/guru/exams/${id}/statistics`),
+  // Review jawaban semua siswa per ujian
+  examAnswers: (id: number) => api.get(`/guru/exams/${id}/answers`),
   // Bank Soal
-  questions: (params?: { page?: number; category_id?: number }) =>
-    api.get('/guru/questions', { params }),
-  createQuestion: (payload: unknown) => api.post('/guru/questions', payload),
-  updateQuestion: (id: number, payload: unknown) => api.put(`/guru/questions/${id}`, payload),
-  deleteQuestion: (id: number) => api.delete(`/guru/questions/${id}`),  // Statistik
+  questions: (params?: { page?: number; category_id?: number; search?: string }) =>
+    api.get('/guru/bank-soal', { params }),
+  createQuestion: (payload: unknown) => api.post('/guru/exams/questions', payload),
+  updateQuestion: (examId: number, questionId: number, payload: unknown) =>
+    api.put(`/guru/exams/${examId}/questions/${questionId}`, payload),
+  deleteQuestion: (examId: number, questionId: number) =>
+    api.delete(`/guru/exams/${examId}/questions/${questionId}`),
+  attachQuestions: (payload: { exam_id: number; question_ids: number[] }) =>
+    api.post('/guru/questions/attach', payload),
+  // Statistik
   stats: () => api.get('/guru/stats'),
   // Kategori
   categories: () => api.get('/guru/categories'),
@@ -80,12 +87,15 @@ export const adminApi = {
   userDetail: (id: number) => api.get(`/admin/users/${id}`),
   banUser: (id: number) => api.patch(`/admin/users/${id}/ban`),
   unbanUser: (id: number) => api.patch(`/admin/users/${id}/unban`),
+  deleteUser: (id: number) => api.delete(`/admin/users/${id}`),
   // Paket langganan
   packages: () => api.get('/admin/packages'),
   createPackage: (payload: unknown) => api.post('/admin/packages', payload),
   updatePackage: (id: number, payload: unknown) => api.put(`/admin/packages/${id}`, payload),
   // Transaksi
   transactions: (params?: { page?: number; status?: string }) =>
-    api.get('/admin/transactions', { params }),
-  transactionDetail: (id: number) => api.get(`/admin/transactions/${id}`),
+    api.get('/admin/history', { params }),
+  transactionDetail: (id: number) => api.get(`/admin/history/${id}`),
+  // Finance
+  finance: () => api.get('/admin/finance'),
 }

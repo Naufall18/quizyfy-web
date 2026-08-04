@@ -26,6 +26,7 @@ import { GuruEditSoal } from './pages/guru/GuruEditSoal'
 import { GuruLangganan } from './pages/guru/GuruLangganan'
 import { AdminDashboard } from './pages/admin/AdminDashboard'
 import { AdminPengguna } from './pages/admin/AdminPengguna'
+import { AdminDetailUser } from './pages/admin/AdminDetailUser'
 import { AdminTransaksi } from './pages/admin/AdminTransaksi'
 import { AdminPaket } from './pages/admin/AdminPaket'
 import { AdminPengaturan } from './pages/admin/AdminPengaturan'
@@ -140,6 +141,7 @@ export const router = createBrowserRouter([
       { index: true, element: <AdminDashboard /> },
       { path: 'stats', element: <AdminStats /> },
       { path: 'pengguna', element: <AdminPengguna /> },
+      { path: 'pengguna/:id', element: <AdminDetailUser /> },
       { path: 'paket', element: <AdminPaket /> },
       { path: 'transaksi', element: <AdminTransaksi /> },
       { path: 'pengaturan', element: <AdminPengaturan /> },
